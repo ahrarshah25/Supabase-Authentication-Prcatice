@@ -16,24 +16,40 @@
     </header>
 
     <section class="profile">
-        <img src="https://via.placeholder.com/150" class="profile-pic" />
+        <img id="profilePic" 
+        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
+        class="profile-pic" />
+
         <h2 id="userName" class="username">username_here</h2>
         <h5 id="userEmail" class="username">user-email</h5>
-        <p id="userBio" class="bio">This is a short bio about the user. Stylish, clean & modern dark UI.</p>
-        
+        <p id="userBio" class="bio">
+            This is a short bio about the user.
+        </p>
+
         <div class="stats">
             <div><span>120</span> Posts</div>
             <div><span>4.2k</span> Followers</div>
             <div><span>350</span> Following</div>
         </div>
+
+        <hr style="margin:20px 0; border-color:#444;">
+
+        <h3 style="text-align:center;">Upload New Profile Image</h3>
+        <input type="file" id="userImage" style="margin-top:10px;">
+        <button onclick="uploadImage()" 
+                style="margin-top:10px; padding:8px 15px;">
+            Upload Image
+        </button>
+
     </section>
 
-    <div class="gallery">
+    <!-- <div class="gallery">
         <img src="https://via.placeholder.com/300" />
         <img src="https://via.placeholder.com/301" />
         <img src="https://via.placeholder.com/302" />
         <img src="https://via.placeholder.com/303" />
-    </div>
+    </div> -->
+
 </body>
 <script type="module" src="./app.js"></script>
 </html>

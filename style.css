@@ -1,7 +1,8 @@
+/* --------- BASIC RESET ---------- */
 * {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     box-sizing: border-box;
 }
 
@@ -10,79 +11,147 @@ body {
     color: #fff;
 }
 
+/* --------- HEADER ---------- */
 header {
     padding: 15px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #111;
-    border-bottom: 1px solid #222;
+    background: #0d0d0d;
+    border-bottom: 1px solid #1f1f1f;
+    position: sticky;
+    top: 0;
+    z-index: 50;
 }
 
 header .logo {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bold;
+    letter-spacing: 1px;
+    color: #fff;
 }
 
 nav a {
     margin-left: 20px;
-    color: #aaa;
+    color: #bbb;
     text-decoration: none;
     font-size: 16px;
+    transition: 0.2s;
 }
 
 nav a:hover {
     color: #fff;
 }
 
+/* --------- PROFILE SECTION ---------- */
 .profile {
     text-align: center;
     padding: 40px 20px;
 }
 
 .profile-pic {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #333;
+    transition: 0.3s;
+}
+
+.profile-pic:hover {
+    transform: scale(1.03);
+    border-color: #555;
 }
 
 .username {
     margin-top: 15px;
-    font-size: 26px;
+    font-size: 28px;
+    font-weight: bold;
 }
 
 .bio {
     margin-top: 10px;
-    color: #ccc;
+    color: #aaa;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.4;
 }
 
+/* --------- STATS ---------- */
 .stats {
     display: flex;
     justify-content: center;
     margin-top: 25px;
+    gap: 40px;
 }
 
 .stats div {
-    margin: 0 20px;
     text-align: center;
 }
 
 .stats span {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 22px;
+    color: #fff;
 }
 
+/* --------- IMAGE UPLOAD ---------- */
+input[type="file"] {
+    margin-top: 15px;
+    background: #111;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #333;
+    color: #ccc;
+}
+
+button {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 10px 18px;
+    border: 1px solid #333;
+    border-radius: 6px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #333;
+}
+
+/* --------- GALLERY ---------- */
 .gallery {
     display: flex;
     flex-wrap: wrap;
     padding: 20px;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .gallery img {
-    width: 300px;
-    height: 300px;
+    width: 310px;
+    height: 310px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 12px;
+    transition: 0.3s;
+    border: 1px solid #222;
+}
+
+.gallery img:hover {
+    transform: scale(1.02);
+    border-color: #444;
+}
+
+/* --------- SMALL SCREENS ---------- */
+@media (max-width: 500px) {
+    .stats {
+        gap: 20px;
+    }
+
+    .gallery img {
+        width: 100%;
+        height: auto;
+    }
 }

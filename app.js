@@ -1,4 +1,4 @@
-console.log("JS Connected - Profile Page Via Supabase Authentication!");
+console.log("JS Connected - Profile + Image Upload!");
 
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
@@ -6,45 +6,76 @@ const supabaseUrl = "https://pjzlrbjacxetuptntdfn.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqemxyYmphY3hldHVwdG50ZGZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyODYzODUsImV4cCI6MjA3ODg2MjM4NX0.n60koN_CiNOlXHknw-b8rbxb090-vz56wQEihQKc-Ps";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+
 async function getUserProfile() {
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    // if (userError || !user) {
-    //     console.log("User Fetch Error:", userError?.message || "No user logged in");
-    //     return;
-    // };
-    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-const userId = sessionData?.session?.user?.id;
 
-if (!userId) {
-    console.log("No logged-in user");
-    return;
-}
+    var userName = document.getElementById("userName");
+    var userEmail = document.getElementById("userEmail");
+    var userBio = document.getElementById("userBio");
+    var profilePic = document.getElementById("profilePic");
 
-const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("username, email, bio")
-    .eq("user_id", userId)
-    .maybeSingle();
+    const { data: loginData, error } = await supabase.auth.getUser();
 
-
-    if (profileError) {
-        console.log("Profile Fetch Error:", profileError.message);
+    if (error) {
+        console.log(error);
         return;
-    };
+    }
 
-    if (!profile) {
-    console.log("No profile found for this user.");
-    document.getElementById("userName").textContent = "Unknown";
-    document.getElementById("userEmail").textContent = user.email;
-    document.getElementById("userBio").textContent = "No bio set";
-    return;
-    };
-    document.getElementById("userName").textContent = profile.username;
-    document.getElementById("userEmail").textContent = profile.email;
-    document.getElementById("userBio").textContent = profile.bio || "No bio set";
+    const username = loginData.user.user_metadata.username;
+    const email = loginData.user.email;
+    const bio = loginData.user.user_metadata.bio;
+    const imgUrl = loginData.user.user_metadata.profileImage;
 
-    
-console.log("UserName: " + profile.username);
+    userName.textContent = username;
+    userEmail.textContent = email;
+    userBio.textContent = bio || "No bio available";
+
+    if (imgUrl) {
+        profilePic.src = imgUrl;
+    }
 }
 
-window.addEventListener("DOMContentLoaded", getUserProfile);
+getUserProfile();
+
+async function uploadImage() {
+
+    const fileInput = document.getElementById("userImage");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select an image!");
+        return;
+    }
+
+    const filePath = "profilePics/" + Date.now() + "-" + file.name;
+
+    const { data, error } = await supabase.storage
+        .from("user_media")
+        .upload(filePath, file);
+
+    if (error) {
+        alert("Upload error: " + error.message);
+        return;
+    }
+    const { data: urlData } = supabase.storage
+        .from("user_media")
+        .getPublicUrl(filePath);
+
+    const imageUrl = urlData.publicUrl;
+
+    const { error: updateError } = await supabase.auth.updateUser({
+        data: {
+            profileImage: imageUrl
+        }
+    });
+
+    if (updateError) {
+        alert("Metadata update error: " + updateError.message);
+        return;
+    }
+
+    alert("Image Uploaded!");
+    document.getElementById("profilePic").src = imageUrl;
+}
+
+window.uploadImage = uploadImage;
