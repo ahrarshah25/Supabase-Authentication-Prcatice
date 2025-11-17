@@ -10,24 +10,28 @@
     <div class="container">
         <h2>Create Account</h2>
 
-        <form>
+        <!-- FIX: call userSignup from onsubmit -->
+        <form onsubmit="userSignup(event)">
+
             <input id="userName" type="text" placeholder="Full Name">
             <input id="userEmail" type="email" placeholder="Email">
             <input id="userPassword" type="password" placeholder="Password">
             <input id="userConfirmPassword" type="password" placeholder="Confirm Password">
             <textarea id="userBio" placeholder="Short Bio"></textarea>
 
-            <button onclick="userSignup(event)" type="submit">Sign Up</button>
-            <br>
-            <br>
-            <button onclick="googleLogin()" type="button" class="google-btn">
-    Login With Google
-</button>
+            <button type="submit">Sign Up</button>
+
+            <br><br>
+
+            <button type="button" onclick="googleLogin()" class="google-btn">
+                Login With Google
+            </button>
 
         </form>
 
         <p class="switch">Already have an account? <a href="login.html">Login</a></p>
     </div>
 </body>
+
 <script type="module" src="./signup.js"></script>
 </html>
