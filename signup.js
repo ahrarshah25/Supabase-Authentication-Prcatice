@@ -3,7 +3,7 @@ console.log("JS Connected - Signup Page Via Supabase!");
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const supabaseUrl = 'https://pjzlrbjacxetuptntdfn.supabase.co';
-const supabaseKey = 'YOUR_PUBLIC_ANON_KEY_ONLY'; // NEVER USE service role key !!!
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqemxyYmphY3hldHVwdG50ZGZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyODYzODUsImV4cCI6MjA3ODg2MjM4NX0.n60koN_CiNOlXHknw-b8rbxb090-vz56wQEihQKc-Ps'; // NEVER USE service role key !!!
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
