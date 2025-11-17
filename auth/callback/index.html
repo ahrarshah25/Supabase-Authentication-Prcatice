@@ -4,46 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding-top: 50px;
-            color: #333;
-        }
-    </style>
 </head>
 <body>
-    <h2>Logging you in, please wait...</h2>
+    <p>Logging you in, please wait...</p>
 
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-// Create Supabase client
 const supabase = createClient(
     "https://pjzlrbjacxetuptntdfn.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqemxyYmphY3hldHVwdG50ZGZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyODYzODUsImV4cCI6MjA3ODg2MjM4NX0.n60koN_CiNOlXHknw-b8rbxb090-vz56wQEihQKc-Ps"  // anon key
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqemxyYmphY3hldHVwdG50ZGZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyODYzODUsImV4cCI6MjA3ODg2MjM4NX0.n60koN_CiNOlXHknw-b8rbxb090-vz56wQEihQKc-Ps"
 );
 
-// ⭐ Correct Supabase V2 PKCE OAuth callback handler
 try {
+    // PKCE flow: exchange code for session
     const { data, error } = await supabase.auth.exchangeCodeForSession(window.location.href);
 
     if (error) {
         console.error("OAuth session exchange error:", error.message);
-        document.body.innerHTML = "<h3>Login failed:</h3>" + error.message;
+        document.body.innerHTML = "Login failed: " + error.message;
     } else {
         console.log("Login success:", data);
-
-        // ⭐ Redirect user to homepage
-        window.location.href = "/";
+        // Redirect to homepage after login
+        window.location.href = "index.html";
     }
-
 } catch (err) {
-    console.error("Unexpected error:", err);
-    document.body.innerHTML = "<h3>Unexpected error:</h3>" + err.message;
+    console.error(err);
+    document.body.innerHTML = "Login failed: " + err.message;
 }
 </script>
-
 </body>
 </html>
