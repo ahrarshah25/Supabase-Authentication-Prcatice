@@ -3,40 +3,57 @@ console.log("JS Connected - Profile + Image Upload!");
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const supabaseUrl = "https://pjzlrbjacxetuptntdfn.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqemxyYmphY3hldHVwdG50ZGZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyODYzODUsImV4cCI6MjA3ODg2MjM4NX0.n60koN_CiNOlXHknw-b8rbxb090-vz56wQEihQKc-Ps";
+const supabaseKey = "YOUR_PUBLIC_ANON_KEY_HERE";  // ⚠️ only anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+// ------------------------------------------
+// 📌 GET USER PROFILE (Normal + Google Both)
+// ------------------------------------------
 async function getUserProfile() {
 
-    var userName = document.getElementById("userName");
-    var userEmail = document.getElementById("userEmail");
-    var userBio = document.getElementById("userBio");
-    var profilePic = document.getElementById("profilePic");
+    const userName = document.getElementById("userName");
+    const userEmail = document.getElementById("userEmail");
+    const userBio = document.getElementById("userBio");
+    const profilePic = document.getElementById("profilePic");
 
     const { data: loginData, error } = await supabase.auth.getUser();
 
-    if (error) {
-        console.log(error);
+    if (error || !loginData?.user) {
+        console.log("User fetch error:", error);
         return;
     }
 
-    const username = loginData.user.user_metadata.username;
-    const email = loginData.user.email;
-    const bio = loginData.user.user_metadata.bio;
-    const imgUrl = loginData.user.user_metadata.profileImage;
+    const user = loginData.user;
 
-    userName.textContent = username;
-    userEmail.textContent = email;
-    userBio.textContent = bio || "No bio available";
+    // ----- Normal signup metadata -----
+    const username_normal = user.user_metadata.username;
+    const bio_normal = user.user_metadata.bio;
+    const img_normal = user.user_metadata.profileImage;
 
-    if (imgUrl) {
-        profilePic.src = imgUrl;
-    }
+    // ----- Google login metadata -----
+    const username_google = user.user_metadata.full_name || user.user_metadata.name;
+    const img_google = user.user_metadata.avatar_url;
+
+    // ----- Final values (fallback system) -----
+    const finalUsername = username_normal || username_google || "Unknown User";
+    const finalBio = bio_normal || "No bio available";
+    const finalImage = img_normal || img_google || "default-avatar.png";
+    const finalEmail = user.email;
+
+    // Display on UI
+    userName.textContent = finalUsername;
+    userEmail.textContent = finalEmail;
+    userBio.textContent = finalBio;
+    profilePic.src = finalImage;
 }
 
 getUserProfile();
 
+
+// ------------------------------------------
+// 📌 UPLOAD PROFILE IMAGE (works for both)
+// ------------------------------------------
 async function uploadImage() {
 
     const fileInput = document.getElementById("userImage");
@@ -49,6 +66,7 @@ async function uploadImage() {
 
     const filePath = "profilePics/" + Date.now() + "-" + file.name;
 
+    // Upload file to Supabase storage
     const { data, error } = await supabase.storage
         .from("user_media")
         .upload(filePath, file);
@@ -57,15 +75,19 @@ async function uploadImage() {
         alert("Upload error: " + error.message);
         return;
     }
+
+    // Get public URL
     const { data: urlData } = supabase.storage
         .from("user_media")
         .getPublicUrl(filePath);
 
     const imageUrl = urlData.publicUrl;
 
+    // Update user metadata (normal + google)
     const { error: updateError } = await supabase.auth.updateUser({
         data: {
-            profileImage: imageUrl
+            profileImage: imageUrl,  // normal users
+            avatar_url: imageUrl     // google users
         }
     });
 
@@ -75,6 +97,8 @@ async function uploadImage() {
     }
 
     alert("Image Uploaded!");
+
+    // Update image on the page
     document.getElementById("profilePic").src = imageUrl;
 }
 
