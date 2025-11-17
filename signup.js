@@ -3,9 +3,10 @@ console.log("JS Connected - Signup Page Via Supabase!");
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const supabaseUrl = 'https://pjzlrbjacxetuptntdfn.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqemxyYmphY3hldHVwdG50ZGZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyODYzODUsImV4cCI6MjA3ODg2MjM4NX0.n60koN_CiNOlXHknw-b8rbxb090-vz56wQEihQKc-Ps';
+const supabaseKey = 'YOUR_PUBLIC_ANON_KEY';  // never expose service role key!
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// NORMAL SIGNUP FUNCTION
 async function userSignup(event) {
     event.preventDefault();
 
@@ -28,7 +29,8 @@ async function userSignup(event) {
         alert("Passwords do not match!");
         return;
     }
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+
+    const { data, error } = await supabase.auth.signUp({
         email: userEmail,
         password: userPassword,
         options: {
@@ -38,13 +40,29 @@ async function userSignup(event) {
             }
         }
     });
-    if (signUpError) {
-        console.log("Signup Error:", signUpError.message);
-        alert("Error during signup: " + signUpError.message);
+
+    if (error) {
+        alert("Error: " + error.message);
     } else {
-        console.log("Signup Successful:", signUpData);
-        alert("Signup successful! Please check your email to confirm your account.");
+        alert("Signup successful! Check your email for verification.");
     }
-};
+}
+
+// GOOGLE LOGIN FUNCTION
+async function googleLogin() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: "http://127.0.0.1:5500/dashboard.html"  // after login where to go
+        }
+    });
+
+    if (error) {
+        alert("Google Login Error: " + error.message);
+    } else {
+        console.log("Google Login Started:", data);
+    }
+}
 
 window.userSignup = userSignup;
+window.googleLogin = googleLogin;
