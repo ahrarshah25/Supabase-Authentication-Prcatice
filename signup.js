@@ -50,12 +50,11 @@ async function userSignup(event) {
 }
 
 
-// GOOGLE LOGIN FUNCTION
 async function googleLogin() {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-            redirectTo: window.location.origin
+            redirectTo: window.location.origin + "/auth/callback"
         }
     });
 
@@ -65,6 +64,7 @@ async function googleLogin() {
         console.log("Google Login Started:", data);
     }
 }
+
 
 
 // expose to HTML
