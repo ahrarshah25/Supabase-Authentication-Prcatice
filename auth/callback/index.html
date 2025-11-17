@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Redirecting...</title>
 </head>
 <body>
@@ -11,13 +11,11 @@
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-// ⚠️ IMPORTANT: apni Public anon key use karni hai, service role kabhi nahi!
 const supabase = createClient(
     "https://pjzlrbjacxetuptntdfn.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqemxyYmphY3hldHVwdG50ZGZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyODYzODUsImV4cCI6MjA3ODg2MjM4NX0.n60koN_CiNOlXHknw-b8rbxb090-vz56wQEihQKc-Ps"
 );
 
-// Supabase OAuth response se session restore
 const { data, error } = await supabase.auth.getSessionFromUrl({ storeSession: true });
 
 if (error) {
@@ -25,8 +23,6 @@ if (error) {
     document.body.innerHTML = "Login failed: " + error.message;
 } else {
     console.log("Login Success:", data);
-
-    // Redirect to homepage after saving session
     window.location.href = "/";
 }
 </script>
